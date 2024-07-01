@@ -1,0 +1,34 @@
+# version: '3.4'
+
+# services:
+#   microservice.customer.api:
+#     image: ${DOCKER_REGISTRY-}microservicecustomerapi
+#     build:
+#       context: .
+#       dockerfile: Microservice.Customer.Api/Dockerfile
+
+version: '3.4'
+
+services:
+  microservice.customer.api:
+    container_name: microservice.customer.api
+    image: ${DOCKER_REGISTRY-}microservicecustomer
+    build:
+      context: .
+      dockerfile: Microservice.Customer.Api/Dockerfile
+    ports: 
+      - "14000:8080"
+      - "14001:8081"
+    environment: 
+        ASPNETCORE_ENVIRONMENT: Development
+        ASPNETCORE_URLS: https://+:8081;http://+:8080
+        ASPNETCORE_HTTPS_PORT: 8081   
+        JWT_ISSUER: ${JWT_ISSUER}
+        JWT_AUDIENCE: ${JWT_AUDIENCE}
+        JWT_SYMMETRIC_SECURITY_KEY: ${JWT_SYMMETRIC_SECURITY_KEY} 
+    networks:
+      - ms-order-system  
+  
+networks:
+  ms-order-system: 
+    external: true
