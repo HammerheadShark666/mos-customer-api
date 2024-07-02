@@ -1,0 +1,51 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy container app to Azure Web App - prod-ap-ms-order-customer
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to registry
+      uses: docker/login-action@v2
+      with:
+        registry: https://prodcrmsordersystem.azurecr.io/
+        username: ${{ secrets.AzureAppService_ContainerUsername_5fe5b35710bb41e18d2a1fb5c41a0bc2 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_e5017220d6944b8e8c5306a2b1011591 }}
+
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: prodcrmsordersystem.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_5fe5b35710bb41e18d2a1fb5c41a0bc2 }}/microservicecustomer:${{ github.sha }}
+        file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'prod-ap-ms-order-customer'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_2cae0c6c126d4e349144cd208943b404 }}
+        images: 'prodcrmsordersystem.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_5fe5b35710bb41e18d2a1fb5c41a0bc2 }}/microservicecustomer:${{ github.sha }}'
