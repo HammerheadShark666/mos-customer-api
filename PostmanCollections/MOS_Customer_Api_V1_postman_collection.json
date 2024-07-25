@@ -41,7 +41,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"username\": \"2119-user@example.com\",\r\n  \"password\": \"Password#1\"\r\n}",
+							"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"Password#1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -171,7 +171,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \r\n    \"Email\": \"2012-user@example.com\",\r\n\t\"Surname\": \"Harrison\",\r\n\t\"FirstName\": \"Jenny\"\r\n}",
+							"raw": "{ \r\n    \"Email\": \"{{existing_username}}\",\r\n\t\"Surname\": \"Harrison\",\r\n\t\"FirstName\": \"Jenny\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
