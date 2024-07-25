@@ -35,15 +35,16 @@ public static class Endpoints
             Summary = "Get a customer based on id.",
             Description = "Gets a customer based on its id.",
             Tags = new List<OpenApiTag> { new() { Name = "Microservice Customer System - Customers" } }
-        }); 
+        });
 
         app.MapPut("api/v{version:apiVersion}/customer/update", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-                                                                    async ([FromBody] UpdateCustomerRequest updateCustomerRequest, [FromServices] IMediator mediator) =>
+        async ([FromBody] UpdateCustomerRequest updateCustomerRequest, [FromServices] IMediator mediator, ICustomerHttpAccessor customerHttpAccessor) =>
         {
+            updateCustomerRequest = updateCustomerRequest with { Id = customerHttpAccessor.CustomerId };
             var updateCustomerResponse = await mediator.Send(updateCustomerRequest);
             return Results.Ok(updateCustomerResponse);
         })
-        .Accepts<UpdateCustomerRequest>("application/json")
+       .Accepts<UpdateCustomerRequest>("application/json")
         .Produces<UpdateCustomerResponse>((int)HttpStatusCode.OK)
         .Produces<BadRequestException>((int)HttpStatusCode.BadRequest)
         .WithName("UpdateCustomer")
