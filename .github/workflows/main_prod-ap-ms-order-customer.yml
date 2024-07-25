@@ -63,4 +63,3 @@ jobs:
       - name: Run API tests
         run: |
           postman collection run "${{ github.workspace }}/PostmanCollections/MOS_Customer_Api_V1_postman_collection.json" -e "d591d746-eb38-4b82-8b55-c85270f512a3" --integration-id "165236-${{ github.run_id }}"
-		  
