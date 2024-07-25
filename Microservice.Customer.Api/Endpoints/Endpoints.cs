@@ -38,8 +38,9 @@ public static class Endpoints
         }); 
 
         app.MapPut("api/v{version:apiVersion}/customer/update", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-                                                                    async ([FromBody] UpdateCustomerRequest updateCustomerRequest, [FromServices] IMediator mediator) =>
+                                                                    async ([FromBody] UpdateCustomerRequest updateCustomerRequest, [FromServices] IMediator mediator, ICustomerHttpAccessor customerHttpAccessor) =>
         {
+            updateCustomerRequest = updateCustomerRequest with { Id = customerHttpAccessor.CustomerId };
             var updateCustomerResponse = await mediator.Send(updateCustomerRequest);
             return Results.Ok(updateCustomerResponse);
         })

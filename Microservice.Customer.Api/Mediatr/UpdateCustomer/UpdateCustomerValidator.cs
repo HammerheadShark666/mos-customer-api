@@ -31,6 +31,7 @@ public class UpdateCustomerValidator : AbstractValidator<UpdateCustomerRequest>
 
     protected async Task<bool> EmailExists(UpdateCustomerRequest updateCustomerRequest)
     {
+        var response = await _customerRepository.CustomerExistsAsync(updateCustomerRequest.Email, updateCustomerRequest.Id);
         return !await _customerRepository.CustomerExistsAsync(updateCustomerRequest.Email, updateCustomerRequest.Id);
     }
 }
