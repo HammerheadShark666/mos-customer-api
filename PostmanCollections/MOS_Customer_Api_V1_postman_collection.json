@@ -66,12 +66,7 @@
 							"script": {
 								"id": "5ec541cc-8e5c-463a-aef1-246f31320c03",
 								"exec": [
-									"let counter = parseInt(postman.getEnvironmentVariable(\"counter\"));\r",
-									"\r",
-									"counter = counter + 1;\r",
-									"\r",
-									"postman.setEnvironmentVariable(\"counter\", counter);\r",
-									"postman.setEnvironmentVariable(\"username\", counter + \"-user@example.com\");"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -128,12 +123,7 @@
 							"script": {
 								"id": "5ec541cc-8e5c-463a-aef1-246f31320c03",
 								"exec": [
-									"let counter = parseInt(postman.getEnvironmentVariable(\"counter\"));\r",
-									"\r",
-									"counter = counter + 1;\r",
-									"\r",
-									"postman.setEnvironmentVariable(\"counter\", counter);\r",
-									"postman.setEnvironmentVariable(\"username\", counter + \"-user@example.com\");"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
