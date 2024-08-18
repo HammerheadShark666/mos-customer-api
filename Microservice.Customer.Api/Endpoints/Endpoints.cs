@@ -17,9 +17,9 @@ public static class Endpoints
 {
     public static void ConfigureRoutes(this WebApplication app, ConfigurationManager configuration)
     {
-        var customerGroup = app.MapGroup("api/v{version:apiVersion}/customer").WithTags("customer");
+        var customerGroup = app.MapGroup("v{version:apiVersion}/customers").WithTags("customers");
 
-        customerGroup.MapGet("", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 
+        customerGroup.MapGet("/logged-in", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 
                                     async ([FromServices] IMediator mediator, ICustomerHttpAccessor customerHttpAccessor) =>
         {
             var getCustomerResponse = await mediator.Send(new GetCustomerRequest(customerHttpAccessor.CustomerId));
@@ -37,7 +37,7 @@ public static class Endpoints
             Tags = new List<OpenApiTag> { new() { Name = "Microservice Customer System - Customers" } }
         });
 
-        app.MapPut("api/v{version:apiVersion}/customer/update", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        customerGroup.MapPut("/update", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         async ([FromBody] UpdateCustomerRequest updateCustomerRequest, [FromServices] IMediator mediator, ICustomerHttpAccessor customerHttpAccessor) =>
         {
             updateCustomerRequest = updateCustomerRequest with { Id = customerHttpAccessor.CustomerId };
