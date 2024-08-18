@@ -173,7 +173,7 @@
 					"response": []
 				},
 				{
-					"name": "{{customer_url}}/{version}/customers",
+					"name": "{{customer_url}}/{version}/customers/logged-in",
 					"event": [
 						{
 							"listen": "test",
@@ -205,7 +205,7 @@
 								"value": "Bearer {{token}}"
 							}
 						],
-						"url": "https://{{customer_url}}/v1/customers"
+						"url": "https://{{customer_url}}/v1/customers/logged-in"
 					},
 					"response": []
 				}
