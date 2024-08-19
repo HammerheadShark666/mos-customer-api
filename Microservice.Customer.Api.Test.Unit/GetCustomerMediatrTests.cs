@@ -52,7 +52,7 @@ public class GetCustomerMediatrTests
         var customer = new Domain.Customer() { Id = customerId, Email = email, Surname = surname, FirstName = firstName };
 
         customerRepositoryMock
-                .Setup(x => x.CustomerExistsAsync(customerId))
+                .Setup(x => x.ExistsAsync(customerId))
                 .Returns(Task.FromResult(true));
 
         customerRepositoryMock
@@ -75,7 +75,7 @@ public class GetCustomerMediatrTests
         var customerId = Guid.NewGuid();
 
         customerRepositoryMock
-                .Setup(x => x.CustomerExistsAsync(customerId))
+                .Setup(x => x.ExistsAsync(customerId))
                 .Returns(Task.FromResult(false));
 
         customerHttpAccessorMock.Setup(x => x.CustomerId)
