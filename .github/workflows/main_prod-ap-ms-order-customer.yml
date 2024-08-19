@@ -63,7 +63,7 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build Microservice.Customer.Api/Microservice.Customer.Api.csproj --configuration Release
 
       - name: Unit Tests
         run: dotnet test Microservice.Customer.Api.Test.Unit/Microservice.Customer.Api.Test.Unit.csproj --logger "console;verbosity=detailed"
