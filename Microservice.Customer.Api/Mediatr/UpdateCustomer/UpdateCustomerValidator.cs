@@ -11,6 +11,12 @@ public class UpdateCustomerValidator : AbstractValidator<UpdateCustomerRequest>
     {
         _customerRepository = customerRepository;
 
+        RuleFor(updateCustomerRequest => updateCustomerRequest).MustAsync(async (updateCustomerRequest, cancellation) =>
+        {
+            return await CustomerExists(updateCustomerRequest.Id);
+        })
+        .WithMessage(x => $"The customer does not exists.");
+
         RuleFor(updateCustomerRequest => updateCustomerRequest.Email)
                 .NotEmpty().WithMessage("Email is required.")
                 .Length(8, 150).WithMessage("Email length between 8 and 150.")
@@ -31,6 +37,11 @@ public class UpdateCustomerValidator : AbstractValidator<UpdateCustomerRequest>
 
     protected async Task<bool> EmailExists(UpdateCustomerRequest updateCustomerRequest)
     {
-        return !await _customerRepository.CustomerExistsAsync(updateCustomerRequest.Email, updateCustomerRequest.Id);
+        return !await _customerRepository.ExistsAsync(updateCustomerRequest.Email, updateCustomerRequest.Id);
+    }
+
+    protected async Task<bool> CustomerExists(Guid customerId)
+    {
+        return await _customerRepository.ExistsAsync(customerId);
     }
 }

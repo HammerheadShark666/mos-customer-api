@@ -48,7 +48,7 @@ public class UpdateCustomerMediatrTests
         customerId = Guid.NewGuid();
 
         customerRepositoryMock
-                .Setup(x => x.CustomerExistsAsync(customerId))
+                .Setup(x => x.ExistsAsync(customerId))
                 .Returns(Task.FromResult(true));
     }
 
@@ -65,6 +65,10 @@ public class UpdateCustomerMediatrTests
         customerRepositoryMock
                 .Setup(x => x.ByIdAsync(customerId))
                 .Returns(Task.FromResult(customer));
+
+        customerRepositoryMock
+                .Setup(x => x.ExistsAsync(customerId))
+                .Returns(Task.FromResult(true));
 
         customer.Surname = "Changed Surname";
         customer.FirstName = "Changed FirstName";
@@ -85,25 +89,25 @@ public class UpdateCustomerMediatrTests
     public void Customer_not_updated_id_does_not_exists_return_exception_fail_message()
     {
         customerRepositoryMock
-                .Setup(x => x.CustomerExistsAsync(customerId))
+                .Setup(x => x.ExistsAsync(customerId))
                 .Returns(Task.FromResult(false));
 
         var updateCustomerRequest = new UpdateCustomerRequest(customerId, "ValidEmail@hotmail.com", "TestSurname", "TestFirstName");
-
-        var notFoundException = Assert.ThrowsAsync<NotFoundException>(async () =>
+         
+        var validationException = Assert.ThrowsAsync<ValidationException>(async () =>
         {
             await mediator.Send(updateCustomerRequest);
         });
 
-        
-        Assert.That(notFoundException.Message, Is.EqualTo("Customer not found."));
+        Assert.That(validationException.Errors.Count, Is.EqualTo(1));
+        Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("The customer does not exists.")); 
     }
 
     [Test]
     public void Customer_not_updated_email_exists_return_exception_fail_message()
     {
         customerRepositoryMock
-                .Setup(x => x.CustomerExistsAsync("InvalidEmail@hotmail.com", customerId))
+                .Setup(x => x.ExistsAsync("InvalidEmail@hotmail.com", customerId))
                 .Returns(Task.FromResult(true));
 
         var updateCustomerRequest = new UpdateCustomerRequest(customerId, "InvalidEmail@hotmail.com", "TestSurname", "TestFirstName");
@@ -121,7 +125,7 @@ public class UpdateCustomerMediatrTests
     public void Customer_not_updated_invalid_email_return_exception_fail_message()
     {
         customerRepositoryMock
-                .Setup(x => x.CustomerExistsAsync("InvalidEmail"))
+                .Setup(x => x.ExistsAsync("InvalidEmail"))
                 .Returns(Task.FromResult(false));
 
         var updateCustomerRequest = new UpdateCustomerRequest(customerId, "InvalidEmail", "TestSurname", "TestFirstName");
@@ -139,7 +143,7 @@ public class UpdateCustomerMediatrTests
     public void Customer_not_updated_invalid_surname_firstname_return_exception_fail_message()
     {
         customerRepositoryMock
-                .Setup(x => x.CustomerExistsAsync("ValidEmail@hotmail.com"))
+                .Setup(x => x.ExistsAsync("ValidEmail@hotmail.com"))
                 .Returns(Task.FromResult(false));
 
         var updateCustomerRequest = new UpdateCustomerRequest(customerId, "ValidEmail@hotmail.com", "TestSurnameTestSurnameTestSurnameTestSurnameTestSurnameTestSurname", "TestFirstNameTestFirstNameTestFirstNameTestFirstNameTestFirstName");
@@ -158,7 +162,7 @@ public class UpdateCustomerMediatrTests
     public void Customer_not_updated_no_email_surname_firstname_return_exception_fail_message()
     { 
         customerRepositoryMock
-                .Setup(x => x.CustomerExistsAsync("ValidEmail@hotmail.com"))
+                .Setup(x => x.ExistsAsync("ValidEmail@hotmail.com"))
                 .Returns(Task.FromResult(false));
 
         var updateCustomerRequest = new UpdateCustomerRequest(customerId, "", "", "");
