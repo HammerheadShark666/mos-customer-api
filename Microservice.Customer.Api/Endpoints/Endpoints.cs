@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using FluentValidation;
 using MediatR;
 using Microservice.Customer.Api.Extensions;
 using Microservice.Customer.Api.Helpers.Exceptions;
@@ -19,14 +20,15 @@ public static class Endpoints
     {
         var customerGroup = app.MapGroup("v{version:apiVersion}/customers").WithTags("customers");
 
-        customerGroup.MapGet("/logged-in", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] 
-                                    async ([FromServices] IMediator mediator, ICustomerHttpAccessor customerHttpAccessor) =>
+        customerGroup.MapGet("/logged-in", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        async ([FromServices] IMediator mediator, ICustomerHttpAccessor customerHttpAccessor) =>
         {
             var getCustomerResponse = await mediator.Send(new GetCustomerRequest(customerHttpAccessor.CustomerId));
             return Results.Ok(getCustomerResponse);
         })
         .Produces<GetCustomerResponse>((int)HttpStatusCode.OK)
         .Produces<BadRequestException>((int)HttpStatusCode.BadRequest)
+        .Produces<ValidationException>((int)HttpStatusCode.BadRequest)
         .WithName("GetCustomer")
         .WithApiVersionSet(app.GetApiVersionSet())
         .MapToApiVersion(new ApiVersion(1, 0))
@@ -38,15 +40,24 @@ public static class Endpoints
         });
 
         customerGroup.MapPut("/update", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        async ([FromBody] UpdateCustomerRequest updateCustomerRequest, [FromServices] IMediator mediator, ICustomerHttpAccessor customerHttpAccessor) =>
+        async ([FromBody] UpdateCustomerRequest updateCustomerRequest, [FromServices] IMediator mediator, ICustomerHttpAccessor customerHttpAccessor, ILogger logger) =>
         {
+            logger.LogInformation("Start - Update customer: {0}", updateCustomerRequest.Id);
+
             updateCustomerRequest = updateCustomerRequest with { Id = customerHttpAccessor.CustomerId };
             var updateCustomerResponse = await mediator.Send(updateCustomerRequest);
+
+            logger.LogInformation("End - Update customer: {0}", updateCustomerRequest.Id);
+
             return Results.Ok(updateCustomerResponse);
         })
-       .Accepts<UpdateCustomerRequest>("application/json")
+        .Accepts<UpdateCustomerRequest>("application/json")
+        .Produces<UpdateCustomerResponse>((int)HttpStatusCode.OK)
         .Produces<UpdateCustomerResponse>((int)HttpStatusCode.OK)
         .Produces<BadRequestException>((int)HttpStatusCode.BadRequest)
+        .Produces<ValidationException>((int)HttpStatusCode.BadRequest)
+        .Produces<ArgumentException>((int)HttpStatusCode.BadRequest)
+        .Produces<NotFoundException>((int)HttpStatusCode.BadRequest)
         .WithName("UpdateCustomer")
         .WithApiVersionSet(app.GetApiVersionSet())
         .MapToApiVersion(new ApiVersion(1, 0))

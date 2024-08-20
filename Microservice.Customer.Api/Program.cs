@@ -16,18 +16,13 @@ builder.Services.ConfigureJwt();
 builder.Services.ConfigureMediatr(); 
 builder.Services.ConfigureSwagger();
 
-
 var app = builder.Build();
 
 app.ConfigureSwagger();
 app.UseHttpsRedirection();
 app.UseAuthentication();
-app.UseAuthorization(); 
-
-if (!app.Environment.IsDevelopment())
-{
-    app.UseMiddleware<ExceptionHandlingMiddleware>();
-}
+app.UseAuthorization();
+app.ConfigureMiddleware();
 
 Endpoints.ConfigureRoutes(app, builder.Configuration);
 
