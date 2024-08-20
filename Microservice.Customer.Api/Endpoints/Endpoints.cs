@@ -40,15 +40,10 @@ public static class Endpoints
         });
 
         customerGroup.MapPut("/update", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        async ([FromBody] UpdateCustomerRequest updateCustomerRequest, [FromServices] IMediator mediator, ICustomerHttpAccessor customerHttpAccessor, ILogger logger) =>
-        {
-            logger.LogInformation("Start - Update customer: {0}", updateCustomerRequest.Id);
-
+        async ([FromBody] UpdateCustomerRequest updateCustomerRequest, [FromServices] IMediator mediator, ICustomerHttpAccessor customerHttpAccessor) =>
+        {  
             updateCustomerRequest = updateCustomerRequest with { Id = customerHttpAccessor.CustomerId };
-            var updateCustomerResponse = await mediator.Send(updateCustomerRequest);
-
-            logger.LogInformation("End - Update customer: {0}", updateCustomerRequest.Id);
-
+            var updateCustomerResponse = await mediator.Send(updateCustomerRequest); 
             return Results.Ok(updateCustomerResponse);
         })
         .Accepts<UpdateCustomerRequest>("application/json")
