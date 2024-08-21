@@ -1,6 +1,5 @@
 using Microservice.Customer.Api.Endpoints;
 using Microservice.Customer.Api.Extensions;
-using Microservice.Customer.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +12,7 @@ builder.Services.ConfigureDI();
 builder.Services.ConfigureDatabaseContext(builder.Configuration);
 builder.Services.ConfigureExceptionHandling();
 builder.Services.ConfigureJwt();
-builder.Services.ConfigureMediatr(); 
+builder.Services.ConfigureMediatr();
 builder.Services.ConfigureSwagger();
 
 var app = builder.Build();

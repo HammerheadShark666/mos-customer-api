@@ -10,5 +10,5 @@ public class CustomerHttpAccessor : Interfaces.ICustomerHttpAccessor
         _accessor = accessor;
     }
 
-    public Guid CustomerId => new Guid( _accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+    public Guid CustomerId => new(_accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 }

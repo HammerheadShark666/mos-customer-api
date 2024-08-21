@@ -14,9 +14,9 @@ namespace Microservice.Customer.Api.Test.Unit;
 [TestFixture]
 public class GetCustomerMediatrTests
 {
-    private Mock<ICustomerRepository> customerRepositoryMock = new Mock<ICustomerRepository>();
-    private Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new Mock<ICustomerHttpAccessor>();
-    private ServiceCollection services = new ServiceCollection();
+    private Mock<ICustomerRepository> customerRepositoryMock = new();
+    private Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
+    private ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
 
@@ -81,13 +81,13 @@ public class GetCustomerMediatrTests
         customerHttpAccessorMock.Setup(x => x.CustomerId)
             .Returns(customerId);
 
-        var getCustomerRequest = new GetCustomerRequest(Guid.NewGuid()); 
+        var getCustomerRequest = new GetCustomerRequest(Guid.NewGuid());
 
         var validationException = Assert.ThrowsAsync<NotFoundException>(async () =>
         {
             await mediator.Send(getCustomerRequest);
         });
-         
+
         Assert.That(validationException.Message, Is.EqualTo("Customer not found."));
     }
 }

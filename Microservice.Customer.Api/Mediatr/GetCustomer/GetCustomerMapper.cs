@@ -6,6 +6,6 @@ public class GetCustomerMapper : Profile
 {
     public GetCustomerMapper()
     {
-        base.CreateMap<Api.Domain.Customer, GetCustomerResponse>(); 
+        base.CreateMap<Api.Domain.Customer, GetCustomerResponse>();
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 namespace Microservice.Customer.Api.Address.Api.Extensions;
 
 public static class JwtExtensions
-{ 
+{
     public static void AddJwtAuthentication(this IServiceCollection services)
     {
         services.AddAuthentication(optiones =>
@@ -30,6 +30,6 @@ public static class JwtExtensions
             };
 
             o.MapInboundClaims = false;
-        }); 
-    } 
+        });
+    }
 }

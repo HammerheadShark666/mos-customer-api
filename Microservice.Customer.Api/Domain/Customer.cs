@@ -6,7 +6,7 @@ namespace Microservice.Customer.Api.Domain;
 [Table("MSOS_Customer")]
 public class Customer
 {
-    [Key] 
+    [Key]
     public Guid Id { get; set; }
 
     [MaxLength(30)]
