@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using Microservice.Customer.Api.Helpers.Exceptions; 
+using Microservice.Customer.Api.Helpers.Exceptions;
 using System.Net;
 using System.Text.Json;
 using static Microservice.Customer.Api.Helpers.Enums;

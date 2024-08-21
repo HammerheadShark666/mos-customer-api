@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore;
 namespace Microservice.Customer.Api.Data.Repository;
 
 public class CustomerRepository(IDbContextFactory<CustomerDbContext> dbContextFactory) : ICustomerRepository
-{    
+{
     public IDbContextFactory<CustomerDbContext> _dbContextFactory { get; set; } = dbContextFactory;
 
     public async Task<Domain.Customer> AddAsync(Domain.Customer customer)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
         await db.AddAsync(customer);
-        await db.SaveChangesAsync(); 
+        await db.SaveChangesAsync();
 
         return customer;
     }
@@ -21,8 +21,8 @@ public class CustomerRepository(IDbContextFactory<CustomerDbContext> dbContextFa
     {
         using var db = _dbContextFactory.CreateDbContext();
         db.Customer.Update(entity);
-        await db.SaveChangesAsync(); 
-    } 
+        await db.SaveChangesAsync();
+    }
 
     public async Task<IEnumerable<Domain.Customer>> AllAsync()
     {

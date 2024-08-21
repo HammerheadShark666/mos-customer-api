@@ -20,9 +20,10 @@ public class UpdateCustomerValidator : AbstractValidator<UpdateCustomerRequest>
         RuleFor(updateCustomerRequest => updateCustomerRequest.Email)
                 .NotEmpty().WithMessage("Email is required.")
                 .Length(8, 150).WithMessage("Email length between 8 and 150.")
-                .EmailAddress().WithMessage("Invalid Email."); 
+                .EmailAddress().WithMessage("Invalid Email.");
 
-        RuleFor(updateCustomerRequest => updateCustomerRequest).MustAsync(async (updateCustomerRequest, cancellation) => {
+        RuleFor(updateCustomerRequest => updateCustomerRequest).MustAsync(async (updateCustomerRequest, cancellation) =>
+        {
             return await EmailExists(updateCustomerRequest);
         }).WithMessage("Customer with this email already exists");
 

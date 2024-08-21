@@ -6,7 +6,7 @@ using Microservice.Customer.Api.Helpers.Interfaces;
 
 namespace Microservice.Customer.Api.MediatR.AddCustomer;
 
-public class UpdateCustomerCommandHandler(ICustomerRepository customerRepository, 
+public class UpdateCustomerCommandHandler(ICustomerRepository customerRepository,
                                           IMapper mapper, ICustomerHttpAccessor customerHttpAccessor) : IRequestHandler<UpdateCustomerRequest, UpdateCustomerResponse>
 {
     private ICustomerRepository _customerRepository { get; set; } = customerRepository;
@@ -19,7 +19,7 @@ public class UpdateCustomerCommandHandler(ICustomerRepository customerRepository
         if (existingCustomer == null)
             throw new NotFoundException("Customer not found.");
 
-        existingCustomer = _mapper.Map(updateCustomerRequest, existingCustomer); 
+        existingCustomer = _mapper.Map(updateCustomerRequest, existingCustomer);
 
         await _customerRepository.UpdateAsync(existingCustomer);
 
