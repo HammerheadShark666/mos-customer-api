@@ -5,6 +5,7 @@ using Microservice.Customer.Api.Helpers;
 using Microservice.Customer.Api.Helpers.Interfaces;
 using Microservice.Customer.Api.MediatR.AddCustomer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System.Reflection;
 
@@ -15,6 +16,7 @@ public class UpdateCustomerMediatrTests
 {
     private Mock<ICustomerRepository> customerRepositoryMock = new();
     private Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
+    private Mock<ILogger<UpdateCustomerCommandHandler>> loggerMock = new();
     private ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
@@ -28,6 +30,7 @@ public class UpdateCustomerMediatrTests
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
         services.AddScoped<ICustomerRepository>(sp => customerRepositoryMock.Object);
         services.AddScoped<ICustomerHttpAccessor>(sp => customerHttpAccessorMock.Object);
+        services.AddScoped<ILogger<UpdateCustomerCommandHandler>>(sp => loggerMock.Object);
         services.AddAutoMapper(Assembly.GetAssembly(typeof(UpdateCustomerMapper)));
 
         serviceProvider = services.BuildServiceProvider();
