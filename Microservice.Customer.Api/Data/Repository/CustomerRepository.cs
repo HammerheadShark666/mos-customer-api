@@ -30,7 +30,7 @@ public class CustomerRepository(IDbContextFactory<CustomerDbContext> dbContextFa
         return await db.Customer.AsNoTracking().ToListAsync();
     }
 
-    public async Task<Domain.Customer> ByIdAsync(Guid id)
+    public async Task<Domain.Customer?> ByIdAsync(Guid id)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
         return await db.Customer.FindAsync(id);

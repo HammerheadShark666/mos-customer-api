@@ -1,3 +1,5 @@
+// Ignore Spelling: Mediatr
+
 using FluentValidation;
 using MediatR;
 using Microservice.Customer.Api.Data.Repository.Interfaces;
@@ -14,10 +16,10 @@ namespace Microservice.Customer.Api.Test.Unit;
 [TestFixture]
 public class UpdateCustomerMediatrTests
 {
-    private Mock<ICustomerRepository> customerRepositoryMock = new();
-    private Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
-    private Mock<ILogger<UpdateCustomerCommandHandler>> loggerMock = new();
-    private ServiceCollection services = new();
+    private readonly Mock<ICustomerRepository> customerRepositoryMock = new();
+    private readonly Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
+    private readonly Mock<ILogger<UpdateCustomerCommandHandler>> loggerMock = new();
+    private readonly ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
     private Guid customerId;
@@ -59,25 +61,28 @@ public class UpdateCustomerMediatrTests
     {
         var customerId = Guid.NewGuid();
 
-        var customer = new Domain.Customer() { Id = customerId, Email = "ValidEmail@hotmail.com", Surname = "TestSurname", FirstName = "TestFirstName" };
+        Domain.Customer? customer = new Domain.Customer() { Id = customerId, Email = "ValidEmail@hotmail.com", Surname = "TestSurname", FirstName = "TestFirstName" };
 
         customerHttpAccessorMock.Setup(x => x.CustomerId)
             .Returns(customerId);
 
         customerRepositoryMock
                 .Setup(x => x.ByIdAsync(customerId))
-                .Returns(Task.FromResult(customer));
+                .Returns(Task.FromResult(customer ?? null));
 
         customerRepositoryMock
                 .Setup(x => x.ExistsAsync(customerId))
                 .Returns(Task.FromResult(true));
 
-        customer.Surname = "Changed Surname";
-        customer.FirstName = "Changed FirstName";
-        customer.Email = "Changed Email";
+        if (customer is not null)
+        {
+            customer.Surname = "Changed Surname";
+            customer.FirstName = "Changed FirstName";
+            customer.Email = "Changed Email";
 
-        customerRepositoryMock
-                .Setup(x => x.UpdateAsync(customer));
+            customerRepositoryMock
+                    .Setup(x => x.UpdateAsync(customer));
+        }       
 
         var updateCustomerRequest = new UpdateCustomerRequest(customerId, "ValidEmail@hotmail.com", "TestSurname", "TestFirstName");
 
@@ -142,7 +147,7 @@ public class UpdateCustomerMediatrTests
     }
 
     [Test]
-    public void Customer_not_updated_invalid_surname_firstname_return_exception_fail_message()
+    public void Customer_not_updated_invalid_surname_first_name_return_exception_fail_message()
     {
         customerRepositoryMock
                 .Setup(x => x.ExistsAsync("ValidEmail@hotmail.com"))

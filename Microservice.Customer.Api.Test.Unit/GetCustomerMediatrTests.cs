@@ -15,10 +15,10 @@ namespace Microservice.Customer.Api.Test.Unit;
 [TestFixture]
 public class GetCustomerMediatrTests
 {
-    private Mock<ICustomerRepository> customerRepositoryMock = new();
-    private Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
-    private Mock<ILogger<GetCustomerQueryHandler>> loggerMock = new();
-    private ServiceCollection services = new();
+    private readonly Mock<ICustomerRepository> customerRepositoryMock = new();
+    private readonly Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
+    private readonly Mock<ILogger<GetCustomerQueryHandler>> loggerMock = new();
+    private readonly ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
 
@@ -60,7 +60,7 @@ public class GetCustomerMediatrTests
 
         customerRepositoryMock
                 .Setup(x => x.ByIdAsync(customerId))
-                .Returns(Task.FromResult(customer));
+                .Returns(Task.FromResult(customer ?? null));
 
         var getCustomerRequest = new GetCustomerRequest(customerId);
 
