@@ -18,7 +18,7 @@ public class GetCustomerQueryHandler(ICustomerRepository customerRepository,
         var customer = await _customerRepository.ByIdAsync(getCustomerRequest.Id);
         if (customer == null)
         {
-            _logger.LogError($"Customer not found - {getCustomerRequest.Id}");
+            _logger.LogError($"Customer not found - { getCustomerRequest.Id }");
             throw new NotFoundException("Customer not found.");
         }
 
