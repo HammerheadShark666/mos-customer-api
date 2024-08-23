@@ -7,17 +7,23 @@ using Microservice.Customer.Api.Helpers.Interfaces;
 namespace Microservice.Customer.Api.MediatR.AddCustomer;
 
 public class UpdateCustomerCommandHandler(ICustomerRepository customerRepository,
-                                          IMapper mapper, ICustomerHttpAccessor customerHttpAccessor) : IRequestHandler<UpdateCustomerRequest, UpdateCustomerResponse>
+                                          ILogger<UpdateCustomerCommandHandler> logger,
+                                          IMapper mapper,
+                                          ICustomerHttpAccessor customerHttpAccessor) : IRequestHandler<UpdateCustomerRequest, UpdateCustomerResponse>
 {
     private ICustomerRepository _customerRepository { get; set; } = customerRepository;
     private IMapper _mapper { get; set; } = mapper;
     private ICustomerHttpAccessor _customerHttpAccessor { get; set; } = customerHttpAccessor;
+    private ILogger<UpdateCustomerCommandHandler> _logger { get; set; } = logger;
 
     public async Task<UpdateCustomerResponse> Handle(UpdateCustomerRequest updateCustomerRequest, CancellationToken cancellationToken)
     {
         var existingCustomer = await _customerRepository.ByIdAsync(_customerHttpAccessor.CustomerId);
         if (existingCustomer == null)
+        {
+            _logger.LogError($"Customer not found - {_customerHttpAccessor.CustomerId}");
             throw new NotFoundException("Customer not found.");
+        }
 
         existingCustomer = _mapper.Map(updateCustomerRequest, existingCustomer);
 
