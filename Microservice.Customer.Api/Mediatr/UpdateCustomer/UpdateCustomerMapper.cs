@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 
-namespace Microservice.Customer.Api.MediatR.AddCustomer;
+namespace Microservice.Customer.Api.Mediatr.UpdateCustomer;
 
 public class UpdateCustomerMapper : Profile
 {
     public UpdateCustomerMapper()
     {
-        base.CreateMap<UpdateCustomerRequest, Microservice.Customer.Api.Domain.Customer>()
+        CreateMap<UpdateCustomerRequest, Domain.Customer>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(x => x.Email, act => act.MapFrom(src => src.Email))
             .ForMember(x => x.Surname, act => act.MapFrom(src => src.Surname))

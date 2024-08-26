@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace Microservice.Customer.Api.Address.Api.Extensions;
+namespace Microservice.Customer.Api.Extensions;
 
 public static class JwtExtensions
 {

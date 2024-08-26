@@ -2,13 +2,9 @@
 
 namespace Microservice.Customer.Api.Helpers;
 
-public class CustomerHttpAccessor : Interfaces.ICustomerHttpAccessor
+public class CustomerHttpAccessor(IHttpContextAccessor accessor) : Interfaces.ICustomerHttpAccessor
 {
-    private readonly IHttpContextAccessor _accessor;
-    public CustomerHttpAccessor(IHttpContextAccessor accessor)
-    {
-        _accessor = accessor;
-    }
+    private readonly IHttpContextAccessor _accessor = accessor;
 
     public Guid CustomerId => new(_accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 }

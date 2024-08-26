@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microservice.Customer.Api.Data.Repository.Interfaces;
 
-namespace Microservice.Customer.Api.MediatR.AddCustomer;
+namespace Microservice.Customer.Api.Mediatr.UpdateCustomer;
 
 public class UpdateCustomerValidator : AbstractValidator<UpdateCustomerRequest>
 {

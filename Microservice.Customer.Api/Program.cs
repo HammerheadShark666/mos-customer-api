@@ -23,6 +23,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.ConfigureMiddleware();
 
-Endpoints.ConfigureRoutes(app, builder.Configuration);
+Endpoints.ConfigureRoutes(app);
 
 app.Run();

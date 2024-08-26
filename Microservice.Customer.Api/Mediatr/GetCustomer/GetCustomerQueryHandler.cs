@@ -12,12 +12,7 @@ public class GetCustomerQueryHandler(ICustomerRepository customerRepository, IMa
 
     public async Task<GetCustomerResponse> Handle(GetCustomerRequest request, CancellationToken cancellationToken)
     {
-        var customer = await _customerRepository.ByIdAsync(request.Id);
-        if (customer == null)
-        {
-            throw new NotFoundException("Customer not found.");
-        }
-
+        var customer = await _customerRepository.ByIdAsync(request.Id) ?? throw new NotFoundException("Customer not found.");
         return _mapper.Map<GetCustomerResponse>(customer);
     }
 }

@@ -1,12 +1,9 @@
-﻿using Microservice.Customer.Api.Data.Context;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace Microservice.Customer.Api.Data.Contexts;
+namespace Microservice.Customer.Api.Data.Context;
 
-public class CustomerDbContext : DbContext
+public class CustomerDbContext(DbContextOptions<CustomerDbContext> options) : DbContext(options)
 {
-    public CustomerDbContext(DbContextOptions<CustomerDbContext> options) : base(options) { }
-
     public DbSet<Domain.Customer> Customer { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -14,9 +14,9 @@ namespace Microservice.Customer.Api.Test.Unit;
 [TestFixture]
 public class GetCustomerMediatrTests
 {
-    private Mock<ICustomerRepository> customerRepositoryMock = new();
-    private Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
-    private ServiceCollection services = new();
+    private readonly Mock<ICustomerRepository> customerRepositoryMock = new();
+    private readonly Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
+    private readonly ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
 
@@ -64,9 +64,12 @@ public class GetCustomerMediatrTests
         var actualResult = await mediator.Send(getCustomerRequest);
         var expectedResult = new GetCustomerResponse(email, surname, firstName);
 
-        Assert.That(actualResult.Email, Is.EqualTo(expectedResult.Email));
-        Assert.That(actualResult.Surname, Is.EqualTo(expectedResult.Surname));
-        Assert.That(actualResult.FirstName, Is.EqualTo(expectedResult.FirstName));
+        Assert.Multiple(() =>
+        {
+            Assert.That(actualResult.Email, Is.EqualTo(expectedResult.Email));
+            Assert.That(actualResult.Surname, Is.EqualTo(expectedResult.Surname));
+            Assert.That(actualResult.FirstName, Is.EqualTo(expectedResult.FirstName));
+        });
     }
 
     [Test]
