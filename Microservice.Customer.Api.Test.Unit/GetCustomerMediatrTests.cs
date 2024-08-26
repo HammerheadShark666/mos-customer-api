@@ -6,6 +6,7 @@ using Microservice.Customer.Api.Helpers.Exceptions;
 using Microservice.Customer.Api.Helpers.Interfaces;
 using Microservice.Customer.Api.MediatR.GetCustomer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System.Reflection;
 
@@ -16,6 +17,7 @@ public class GetCustomerMediatrTests
 {
     private readonly Mock<ICustomerRepository> customerRepositoryMock = new();
     private readonly Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
+    private Mock<ILogger<GetCustomerQueryHandler>> loggerMock = new();
     private readonly ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
