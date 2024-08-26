@@ -1,8 +1,7 @@
 ﻿using Asp.Versioning;
 using FluentValidation;
 using MediatR;
-using Microservice.Customer.Api.Address.Api.Extensions;
-using Microservice.Customer.Api.Data.Contexts;
+using Microservice.Customer.Api.Data.Context;
 using Microservice.Customer.Api.Data.Repository;
 using Microservice.Customer.Api.Data.Repository.Interfaces;
 using Microservice.Customer.Api.Helpers;

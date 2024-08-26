@@ -5,7 +5,7 @@ using MediatR;
 using Microservice.Customer.Api.Data.Repository.Interfaces;
 using Microservice.Customer.Api.Helpers;
 using Microservice.Customer.Api.Helpers.Interfaces;
-using Microservice.Customer.Api.MediatR.AddCustomer;
+using Microservice.Customer.Api.Mediatr.UpdateCustomer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -18,7 +18,6 @@ public class UpdateCustomerMediatrTests
 {
     private readonly Mock<ICustomerRepository> customerRepositoryMock = new();
     private readonly Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
-    private readonly Mock<ILogger<UpdateCustomerCommandHandler>> loggerMock = new();
     private readonly ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
@@ -160,13 +159,16 @@ public class UpdateCustomerMediatrTests
             await mediator.Send(updateCustomerRequest);
         });
 
-        Assert.That(validationException.Errors.Count, Is.EqualTo(2));
-        Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Surname length between 1 and 30."));
-        Assert.That(validationException.Errors.ElementAt(1).ErrorMessage, Is.EqualTo("First name length between 1 and 30."));
+        Assert.Multiple(() =>
+        {
+            Assert.That(validationException.Errors.Count, Is.EqualTo(2));
+            Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Surname length between 1 and 30."));
+            Assert.That(validationException.Errors.ElementAt(1).ErrorMessage, Is.EqualTo("First name length between 1 and 30."));
+        });
     }
 
     [Test]
-    public void Customer_not_updated_no_email_surname_firstname_return_exception_fail_message()
+    public void Customer_not_updated_no_email_surname_first_name_return_exception_fail_message()
     {
         customerRepositoryMock
                 .Setup(x => x.ExistsAsync("ValidEmail@hotmail.com"))
@@ -179,13 +181,16 @@ public class UpdateCustomerMediatrTests
             await mediator.Send(updateCustomerRequest);
         });
 
-        Assert.That(validationException.Errors.Count, Is.EqualTo(7));
-        Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Email is required."));
-        Assert.That(validationException.Errors.ElementAt(1).ErrorMessage, Is.EqualTo("Email length between 8 and 150."));
-        Assert.That(validationException.Errors.ElementAt(2).ErrorMessage, Is.EqualTo("Invalid Email."));
-        Assert.That(validationException.Errors.ElementAt(3).ErrorMessage, Is.EqualTo("Surname is required."));
-        Assert.That(validationException.Errors.ElementAt(4).ErrorMessage, Is.EqualTo("Surname length between 1 and 30."));
-        Assert.That(validationException.Errors.ElementAt(5).ErrorMessage, Is.EqualTo("First name is required."));
-        Assert.That(validationException.Errors.ElementAt(6).ErrorMessage, Is.EqualTo("First name length between 1 and 30."));
+        Assert.Multiple(() =>
+        {
+            Assert.That(validationException.Errors.Count, Is.EqualTo(7));
+            Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Email is required."));
+            Assert.That(validationException.Errors.ElementAt(1).ErrorMessage, Is.EqualTo("Email length between 8 and 150."));
+            Assert.That(validationException.Errors.ElementAt(2).ErrorMessage, Is.EqualTo("Invalid Email."));
+            Assert.That(validationException.Errors.ElementAt(3).ErrorMessage, Is.EqualTo("Surname is required."));
+            Assert.That(validationException.Errors.ElementAt(4).ErrorMessage, Is.EqualTo("Surname length between 1 and 30."));
+            Assert.That(validationException.Errors.ElementAt(5).ErrorMessage, Is.EqualTo("First name is required."));
+            Assert.That(validationException.Errors.ElementAt(6).ErrorMessage, Is.EqualTo("First name length between 1 and 30."));
+        });
     }
 }

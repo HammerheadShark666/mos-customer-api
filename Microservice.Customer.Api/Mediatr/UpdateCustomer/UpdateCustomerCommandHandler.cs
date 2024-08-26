@@ -4,7 +4,7 @@ using Microservice.Customer.Api.Data.Repository.Interfaces;
 using Microservice.Customer.Api.Helpers.Exceptions;
 using Microservice.Customer.Api.Helpers.Interfaces;
 
-namespace Microservice.Customer.Api.MediatR.AddCustomer;
+namespace Microservice.Customer.Api.Mediatr.UpdateCustomer;
 
 public class UpdateCustomerCommandHandler(ICustomerRepository customerRepository,
                                           ILogger<UpdateCustomerCommandHandler> logger,

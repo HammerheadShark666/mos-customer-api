@@ -1,3 +1,3 @@
-namespace Microservice.Customer.Api.MediatR.AddCustomer;
+namespace Microservice.Customer.Api.Mediatr.UpdateCustomer;
 
 public record UpdateCustomerResponse(string message);

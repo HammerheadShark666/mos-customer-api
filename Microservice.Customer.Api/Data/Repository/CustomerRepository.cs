@@ -1,4 +1,4 @@
-﻿using Microservice.Customer.Api.Data.Contexts;
+﻿using Microservice.Customer.Api.Data.Context;
 using Microservice.Customer.Api.Data.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
