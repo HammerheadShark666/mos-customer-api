@@ -17,6 +17,7 @@ public class GetCustomerMediatrTests
 {
     private readonly Mock<ICustomerRepository> customerRepositoryMock = new();
     private readonly Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
+    private Mock<ILogger<GetCustomerQueryHandler>> loggerMock = new();
     private readonly ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
