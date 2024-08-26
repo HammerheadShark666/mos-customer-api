@@ -14,28 +14,45 @@ jobs:
     runs-on: 'ubuntu-latest'
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v3
 
     - name: Log in to registry
-      uses: docker/login-action@v2
+      uses: docker/login-action@v3
       with:
         registry: https://prodcrmsordersystem.azurecr.io/
         username: ${{ secrets.AzureAppService_ContainerUsername_7f841e2c5fcd40e4b7eb95c24c4711cc }}
         password: ${{ secrets.AzureAppService_ContainerPassword_7820bb45560246ccb4db192c85cd6c64 }}
 
     - name: Build and push container image to registry
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v6
       with:
         push: true
         tags: prodcrmsordersystem.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_7f841e2c5fcd40e4b7eb95c24c4711cc }}/microservicecustomer:${{ github.sha }}
         file: ./Microservice.Customer.Api/Dockerfile
 
-  deploy:
+  unit-tests:
     runs-on: ubuntu-latest
     needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+          
+      - name: Build with dotnet
+        run: dotnet build Microservice.Customer.Api/Microservice.Customer.Api.csproj --configuration Release
+
+      - name: Unit Tests
+        run: dotnet test Microservice.Customer.Api.Test.Unit/Microservice.Customer.Api.Test.Unit.csproj --logger "console;verbosity=detailed"
+  
+  deploy:
+    runs-on: ubuntu-latest
+    needs: unit-tests
     environment:
       name: 'production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
@@ -43,34 +60,16 @@ jobs:
     steps:
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v3
       with:
         app-name: 'prod-ap-ms-order-customer'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_cd2f51ba1d6e48b98c0346ba7df5d0f4 }}
         images: 'prodcrmsordersystem.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_7f841e2c5fcd40e4b7eb95c24c4711cc }}/microservicecustomer:${{ github.sha }}'
-
-  unit-tests:
-    runs-on: ubuntu-latest
-    needs: deploy
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '8.x'
-          include-prerelease: true
-
-      - name: Build with dotnet
-        run: dotnet build Microservice.Customer.Api/Microservice.Customer.Api.csproj --configuration Release
-
-      - name: Unit Tests
-        run: dotnet test Microservice.Customer.Api.Test.Unit/Microservice.Customer.Api.Test.Unit.csproj --logger "console;verbosity=detailed"
   
   automated-api-tests:
     runs-on: ubuntu-latest
-    needs: unit-tests
+    needs: deploy
     steps:
       - uses: actions/checkout@v4
       - name: Install Postman CLI

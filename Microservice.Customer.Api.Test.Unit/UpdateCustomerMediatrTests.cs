@@ -1,3 +1,5 @@
+// Ignore Spelling: Mediatr
+
 using FluentValidation;
 using MediatR;
 using Microservice.Customer.Api.Data.Repository.Interfaces;
@@ -5,6 +7,7 @@ using Microservice.Customer.Api.Helpers;
 using Microservice.Customer.Api.Helpers.Interfaces;
 using Microservice.Customer.Api.Mediatr.UpdateCustomer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System.Reflection;
 
@@ -28,6 +31,7 @@ public class UpdateCustomerMediatrTests
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
         services.AddScoped<ICustomerRepository>(sp => customerRepositoryMock.Object);
         services.AddScoped<ICustomerHttpAccessor>(sp => customerHttpAccessorMock.Object);
+        services.AddScoped<ILogger<UpdateCustomerCommandHandler>>(sp => loggerMock.Object);
         services.AddAutoMapper(Assembly.GetAssembly(typeof(UpdateCustomerMapper)));
 
         serviceProvider = services.BuildServiceProvider();
@@ -56,25 +60,28 @@ public class UpdateCustomerMediatrTests
     {
         var customerId = Guid.NewGuid();
 
-        var customer = new Domain.Customer() { Id = customerId, Email = "ValidEmail@hotmail.com", Surname = "TestSurname", FirstName = "TestFirstName" };
+        Domain.Customer? customer = new Domain.Customer() { Id = customerId, Email = "ValidEmail@hotmail.com", Surname = "TestSurname", FirstName = "TestFirstName" };
 
         customerHttpAccessorMock.Setup(x => x.CustomerId)
             .Returns(customerId);
 
         customerRepositoryMock
                 .Setup(x => x.ByIdAsync(customerId))
-                .Returns(Task.FromResult(customer));
+                .Returns(Task.FromResult(customer ?? null));
 
         customerRepositoryMock
                 .Setup(x => x.ExistsAsync(customerId))
                 .Returns(Task.FromResult(true));
 
-        customer.Surname = "Changed Surname";
-        customer.FirstName = "Changed FirstName";
-        customer.Email = "Changed Email";
+        if (customer is not null)
+        {
+            customer.Surname = "Changed Surname";
+            customer.FirstName = "Changed FirstName";
+            customer.Email = "Changed Email";
 
-        customerRepositoryMock
-                .Setup(x => x.UpdateAsync(customer));
+            customerRepositoryMock
+                    .Setup(x => x.UpdateAsync(customer));
+        }       
 
         var updateCustomerRequest = new UpdateCustomerRequest(customerId, "ValidEmail@hotmail.com", "TestSurname", "TestFirstName");
 

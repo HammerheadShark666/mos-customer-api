@@ -6,6 +6,7 @@ using Microservice.Customer.Api.Helpers.Exceptions;
 using Microservice.Customer.Api.Helpers.Interfaces;
 using Microservice.Customer.Api.MediatR.GetCustomer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System.Reflection;
 
@@ -28,6 +29,7 @@ public class GetCustomerMediatrTests
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
         services.AddScoped<ICustomerRepository>(sp => customerRepositoryMock.Object);
         services.AddScoped<ICustomerHttpAccessor>(sp => customerHttpAccessorMock.Object);
+        services.AddScoped<ILogger<GetCustomerQueryHandler>>(sp => loggerMock.Object);
         services.AddAutoMapper(Assembly.GetAssembly(typeof(GetCustomerMapper)));
 
         serviceProvider = services.BuildServiceProvider();
@@ -57,7 +59,7 @@ public class GetCustomerMediatrTests
 
         customerRepositoryMock
                 .Setup(x => x.ByIdAsync(customerId))
-                .Returns(Task.FromResult(customer));
+                .Returns(Task.FromResult(customer ?? null));
 
         var getCustomerRequest = new GetCustomerRequest(customerId);
 
