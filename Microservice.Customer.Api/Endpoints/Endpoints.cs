@@ -18,7 +18,7 @@ public static class Endpoints
 {
     public static void ConfigureRoutes(this WebApplication webApplication)
     {
-        var customerGroup = webApplication.MapGroup("v{version:apiVersion}/customers").WithTags("customers");
+        var customerGroup = webApplication.MapGroup("v{version:apiVersion}/customer").WithTags("customer");
 
         customerGroup.MapGet("/logged-in", [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         async ([FromServices] IMediator mediator, ICustomerHttpAccessor customerHttpAccessor) =>
