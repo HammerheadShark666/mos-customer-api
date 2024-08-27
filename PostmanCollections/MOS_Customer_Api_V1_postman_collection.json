@@ -59,7 +59,7 @@
 			"name": "Customer",
 			"item": [
 				{
-					"name": "{{customer_url}}/{version}/customers/update (Success)",
+					"name": "{{customer_url}}/{version}/customer/update (Success)",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -111,12 +111,12 @@
 								}
 							}
 						},
-						"url": "https://{{customer_url}}/v1/customers/update"
+						"url": "https://{{customer_url}}/v1/customer/update"
 					},
 					"response": []
 				},
 				{
-					"name": "{{customer_url}}/{version}/customers/update (Fail - Duplicate Email)",
+					"name": "{{customer_url}}/{version}/customer/update (Fail - Duplicate Email)",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -168,12 +168,12 @@
 								}
 							}
 						},
-						"url": "https://{{customer_url}}/v1/customers/update"
+						"url": "https://{{customer_url}}/v1/customer/update"
 					},
 					"response": []
 				},
 				{
-					"name": "{{customer_url}}/{version}/customers/logged-in",
+					"name": "{{customer_url}}/{version}/customer/logged-in",
 					"event": [
 						{
 							"listen": "test",
@@ -205,7 +205,7 @@
 								"value": "Bearer {{token}}"
 							}
 						],
-						"url": "https://{{customer_url}}/v1/customers/logged-in"
+						"url": "https://{{customer_url}}/v1/customer/logged-in"
 					},
 					"response": []
 				}
