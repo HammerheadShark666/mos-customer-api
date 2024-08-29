@@ -13,7 +13,7 @@ public class CustomerHttpAccessor(IHttpContextAccessor accessor) : Interfaces.IC
 
             var customerId = accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return customerId == null ? throw new ArgumentNullException("NameIdentifier not found with customer Id") : new(customerId);
+            return customerId == null ? throw new ArgumentNullException("NameIdentifier not found with customer Id.") : new(customerId);
         }
     }
 }
