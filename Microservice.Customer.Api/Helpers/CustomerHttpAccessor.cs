@@ -4,7 +4,16 @@ namespace Microservice.Customer.Api.Helpers;
 
 public class CustomerHttpAccessor(IHttpContextAccessor accessor) : Interfaces.ICustomerHttpAccessor
 {
-    private readonly IHttpContextAccessor _accessor = accessor;
+    public Guid CustomerId
+    {
+        get
+        {
+            if (accessor == null || accessor.HttpContext == null || accessor.HttpContext.User == null)
+                throw new ArgumentNullException("IHttpContextAccessor not found.");
 
-    public Guid CustomerId => new(_accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var customerId = accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return customerId == null ? throw new ArgumentNullException("NameIdentifier not found with customer Id.") : new(customerId);
+        }
+    }
 }

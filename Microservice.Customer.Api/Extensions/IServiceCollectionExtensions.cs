@@ -7,6 +7,7 @@ using Microservice.Customer.Api.Data.Repository.Interfaces;
 using Microservice.Customer.Api.Helpers;
 using Microservice.Customer.Api.Helpers.Interfaces;
 using Microservice.Customer.Api.Helpers.Swagger;
+using Microservice.Customer.Api.Mediatr.UpdateCustomer;
 using Microservice.Customer.Api.MediatR.GetCustomer;
 using Microservice.Customer.Api.Middleware;
 using Microsoft.EntityFrameworkCore;
@@ -52,7 +53,7 @@ public static class IServiceCollectionExtensions
 
     public static void ConfigureMediatr(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<GetCustomerValidator>();
+        services.AddValidatorsFromAssemblyContaining<UpdateCustomerValidator>();
         services.AddMediatR(_ => _.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
     }

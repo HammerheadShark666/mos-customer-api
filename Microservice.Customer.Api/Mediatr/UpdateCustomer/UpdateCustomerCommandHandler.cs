@@ -11,23 +11,18 @@ public class UpdateCustomerCommandHandler(ICustomerRepository customerRepository
                                           IMapper mapper,
                                           ICustomerHttpAccessor customerHttpAccessor) : IRequestHandler<UpdateCustomerRequest, UpdateCustomerResponse>
 {
-    private ICustomerRepository _customerRepository { get; set; } = customerRepository;
-    private IMapper _mapper { get; set; } = mapper;
-    private ICustomerHttpAccessor _customerHttpAccessor { get; set; } = customerHttpAccessor;
-    private ILogger<UpdateCustomerCommandHandler> _logger { get; set; } = logger;
-
     public async Task<UpdateCustomerResponse> Handle(UpdateCustomerRequest updateCustomerRequest, CancellationToken cancellationToken)
     {
-        var existingCustomer = await _customerRepository.ByIdAsync(_customerHttpAccessor.CustomerId);
+        var existingCustomer = await customerRepository.ByIdAsync(customerHttpAccessor.CustomerId);
         if (existingCustomer == null)
         {
-            _logger.LogError($"Customer not found - {_customerHttpAccessor.CustomerId}");
+            logger.LogError("Customer not found - {_customerHttpAccessor.CustomerId}", customerHttpAccessor.CustomerId);
             throw new NotFoundException("Customer not found.");
         }
 
-        existingCustomer = _mapper.Map(updateCustomerRequest, existingCustomer);
+        existingCustomer = mapper.Map(updateCustomerRequest, existingCustomer);
 
-        await _customerRepository.UpdateAsync(existingCustomer);
+        await customerRepository.UpdateAsync(existingCustomer);
 
         return new UpdateCustomerResponse("Customer Updated.");
     }

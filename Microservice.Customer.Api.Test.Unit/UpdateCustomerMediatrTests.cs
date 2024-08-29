@@ -18,7 +18,7 @@ public class UpdateCustomerMediatrTests
 {
     private readonly Mock<ICustomerRepository> customerRepositoryMock = new();
     private readonly Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
-    private Mock<ILogger<UpdateCustomerCommandHandler>> loggerMock = new();
+    private readonly Mock<ILogger<UpdateCustomerCommandHandler>> loggerMock = new();
     private readonly ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
@@ -61,7 +61,7 @@ public class UpdateCustomerMediatrTests
     {
         var customerId = Guid.NewGuid();
 
-        Domain.Customer? customer = new Domain.Customer() { Id = customerId, Email = "ValidEmail@hotmail.com", Surname = "TestSurname", FirstName = "TestFirstName" };
+        Domain.Customer? customer = new() { Id = customerId, Email = "ValidEmail@hotmail.com", Surname = "TestSurname", FirstName = "TestFirstName" };
 
         customerHttpAccessorMock.Setup(x => x.CustomerId)
             .Returns(customerId);
@@ -82,14 +82,14 @@ public class UpdateCustomerMediatrTests
 
             customerRepositoryMock
                     .Setup(x => x.UpdateAsync(customer));
-        }       
+        }
 
         var updateCustomerRequest = new UpdateCustomerRequest(customerId, "ValidEmail@hotmail.com", "TestSurname", "TestFirstName");
 
         var actualResult = await mediator.Send(updateCustomerRequest);
         var expectedResult = "Customer Updated.";
 
-        Assert.That(actualResult.message, Is.EqualTo(expectedResult));
+        Assert.That(actualResult.Message, Is.EqualTo(expectedResult));
     }
 
     [Test]
@@ -106,8 +106,11 @@ public class UpdateCustomerMediatrTests
             await mediator.Send(updateCustomerRequest);
         });
 
-        Assert.That(validationException.Errors.Count, Is.EqualTo(1));
-        Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("The customer does not exists."));
+        Assert.Multiple(() =>
+        {
+            Assert.That(validationException.Errors.Count, Is.EqualTo(1));
+            Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("The customer does not exists."));
+        });
     }
 
     [Test]
@@ -124,8 +127,11 @@ public class UpdateCustomerMediatrTests
             await mediator.Send(updateCustomerRequest);
         });
 
-        Assert.That(validationException.Errors.Count, Is.EqualTo(1));
-        Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Customer with this email already exists"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(validationException.Errors.Count, Is.EqualTo(1));
+            Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Customer with this email already exists"));
+        });
     }
 
     [Test]
@@ -142,8 +148,11 @@ public class UpdateCustomerMediatrTests
             await mediator.Send(updateCustomerRequest);
         });
 
-        Assert.That(validationException.Errors.Count, Is.EqualTo(1));
-        Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Invalid Email."));
+        Assert.Multiple(() =>
+        {
+            Assert.That(validationException.Errors.Count, Is.EqualTo(1));
+            Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Invalid Email."));
+        });
     }
 
     [Test]

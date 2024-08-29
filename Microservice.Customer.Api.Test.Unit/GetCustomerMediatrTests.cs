@@ -1,4 +1,3 @@
-using FluentValidation;
 using MediatR;
 using Microservice.Customer.Api.Data.Repository.Interfaces;
 using Microservice.Customer.Api.Helpers;
@@ -17,7 +16,7 @@ public class GetCustomerMediatrTests
 {
     private readonly Mock<ICustomerRepository> customerRepositoryMock = new();
     private readonly Mock<ICustomerHttpAccessor> customerHttpAccessorMock = new();
-    private Mock<ILogger<GetCustomerQueryHandler>> loggerMock = new();
+    private readonly Mock<ILogger<GetCustomerQueryHandler>> loggerMock = new();
     private readonly ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
@@ -25,7 +24,6 @@ public class GetCustomerMediatrTests
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
-        services.AddValidatorsFromAssemblyContaining<GetCustomerValidator>();
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetCustomerQueryHandler).Assembly));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
         services.AddScoped<ICustomerRepository>(sp => customerRepositoryMock.Object);
