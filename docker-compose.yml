@@ -1,12 +1,3 @@
-# version: '3.4'
-
-# services:
-#   microservice.customer.api:
-#     image: ${DOCKER_REGISTRY-}microservicecustomerapi
-#     build:
-#       context: .
-#       dockerfile: Microservice.Customer.Api/Dockerfile
-
 version: '3.4'
 
 services:
