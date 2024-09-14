@@ -6,10 +6,12 @@ using Microservice.Customer.Api.Data.Repository;
 using Microservice.Customer.Api.Data.Repository.Interfaces;
 using Microservice.Customer.Api.Helpers;
 using Microservice.Customer.Api.Helpers.Interfaces;
+using Microservice.Customer.Api.Helpers.Providers;
 using Microservice.Customer.Api.Helpers.Swagger;
 using Microservice.Customer.Api.Mediatr.UpdateCustomer;
 using Microservice.Customer.Api.MediatR.GetCustomer;
 using Microservice.Customer.Api.Middleware;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -44,11 +46,37 @@ public static class IServiceCollectionExtensions
         services.AddAutoMapper(Assembly.GetAssembly(typeof(GetCustomerMapper)));
     }
 
-    public static void ConfigureDatabaseContext(this IServiceCollection services, ConfigurationManager configuration)
+    //public static void ConfigureDatabaseContext(this IServiceCollection services, ConfigurationManager configuration)
+    //{
+    //    services.AddDbContextFactory<CustomerDbContext>(options =>
+    //        options.UseSqlServer(configuration.GetConnectionString(Helpers.Constants.DatabaseConnectionString),
+    //        options => options.EnableRetryOnFailure()));
+    //}
+
+    public static void ConfigureSqlServer(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
-        services.AddDbContextFactory<CustomerDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString(Helpers.Constants.DatabaseConnectionString),
-            options => options.EnableRetryOnFailure()));
+        if (environment.IsProduction())
+        {
+            services.AddDbContextFactory<CustomerDbContext>(options =>
+            {
+                SqlAuthenticationProvider.SetProvider(
+                        SqlAuthenticationMethod.ActiveDirectoryManagedIdentity,
+                        new ProductionAzureSQLProvider());
+                var sqlConnection = new SqlConnection(configuration.GetConnectionString(Constants.AzureDatabaseConnectionString));
+                options.UseSqlServer(sqlConnection);
+            });
+        }
+        else if (environment.IsDevelopment())
+        {
+            services.AddDbContextFactory<CustomerDbContext>(options =>
+            {
+                SqlAuthenticationProvider.SetProvider(
+                        SqlAuthenticationMethod.ActiveDirectoryServicePrincipal,
+                        new DevelopmentAzureSQLProvider());
+                var sqlConnection = new SqlConnection(configuration.GetConnectionString(Constants.LocalDatabaseConnectionString));
+                options.UseSqlServer(sqlConnection);
+            });
+        }
     }
 
     public static void ConfigureMediatr(this IServiceCollection services)
