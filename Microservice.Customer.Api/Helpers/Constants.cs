@@ -6,8 +6,6 @@ public class Constants
     public const string JwtAudience = "JWT_AUDIENCE";
     public const string JwtSymmetricSecurityKey = "JWT_SYMMETRIC_SECURITY_KEY";
 
-    //public const string DatabaseConnectionString = "SQLAZURECONNSTR_CUSTOMER";
-
     public const string AzureUserAssignedManagedIdentityClientId = "AZURE_USER_ASSIGNED_MANAGED_IDENTITY_CLIENT_ID";
     public const string AzureDatabaseConnectionString = "AZURE_MANAGED_IDENTITY_SQL_CONNECTION";
 
