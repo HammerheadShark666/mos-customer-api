@@ -9,13 +9,10 @@ public class EnvironmentVariables
     public static string JwtIssuer => GetEnvironmentVariable(Constants.JwtIssuer);
     public static string JwtAudience => GetEnvironmentVariable(Constants.JwtAudience);
     public static string JwtSymmetricSecurityKey => GetEnvironmentVariable(Constants.JwtSymmetricSecurityKey);
-    // public static string AzureDatabaseConnectionString => GetEnvironmentVariable(Constants.AzureDatabaseConnectionString);
     public static string AzureUserAssignedManagedIdentityClientId => GetEnvironmentVariable(Constants.AzureUserAssignedManagedIdentityClientId);
-    //public static string LocalDatabaseConnectionString => GetEnvironmentVariable(Constants.LocalDatabaseConnectionString);
     public static string LocalDevelopmentClientId => GetEnvironmentVariable(Constants.AzureLocalDevelopmentClientId);
     public static string LocalDevelopmentClientSecret => GetEnvironmentVariable(Constants.AzureLocalDevelopmentClientSecret);
     public static string LocalDevelopmentTenantId => GetEnvironmentVariable(Constants.AzureLocalDevelopmentTenantId);
-
 
     public static string GetEnvironmentVariable(string name)
     {
